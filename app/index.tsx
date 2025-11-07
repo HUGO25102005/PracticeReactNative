@@ -1,7 +1,5 @@
-import { TextInput, Text, Button, Alert } from "react-native";
-import { useState } from "react";
-import { validarEmail, validarPasswrd } from "@/helpers";
 import {
+  ActionsContainer,
   BoxImage,
   BtnView,
   CorreoView,
@@ -9,8 +7,13 @@ import {
   MainContainer,
   PasswView,
   RedViewWithImage,
+  ScreenContent,
+  TitleText,
 } from "@/components";
+import { validarEmail, validarPasswrd } from "@/helpers";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Button, Text, TextInput } from "react-native";
 
 export default function Index() {
   const [email, setEmail] = useState("");
@@ -60,7 +63,7 @@ export default function Index() {
       timestamp: new Date().toISOString(),
     };
 
-    console.log("Datos guardados:", userData);
+    // console.log("Datos guardados:", userData);
 
     Alert.alert(
       "¡Éxito!",
@@ -85,54 +88,60 @@ export default function Index() {
   // ... (JSX del componente)
   return (
     <MainContainer>
-      <RedViewWithImage>
-        <BoxImage
-          source={require("./../assets/images/person_512dp_292929_FILL0_wght500_GRAD0_opsz48.png")}
-          resizeMode="cover"
-          testID="icon-image"
-        />
-      </RedViewWithImage>
+      <ScreenContent>
+        <RedViewWithImage>
+          <BoxImage
+            source={require("./../assets/images/person_512dp_292929_FILL0_wght500_GRAD0_opsz48.png")}
+            resizeMode="cover"
+            testID="icon-image"
+          />
+        </RedViewWithImage>
 
-      <LabelView>
-        <Text>Correo:</Text>
-      </LabelView>
-      <CorreoView>
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          placeholder="ejemplo@correo.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-      </CorreoView>
+        <TitleText>Iniciar sesión</TitleText>
 
-      <LabelView>
-        <Text>Contraseña:</Text>
-      </LabelView>
-      <PasswView>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Ex4mpl3pa55"
-          secureTextEntry={true} // oculta la contraseña
-          autoCapitalize="none"
-        />
-      </PasswView>
+        <LabelView>
+          <Text>Correo:</Text>
+        </LabelView>
+        <CorreoView>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="ejemplo@correo.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </CorreoView>
 
-      <BtnView>
-        <Button
-          title="Iniciar Sesión"
-          onPress={handleSubmit}
-          color="lightblack"
-        />
-      </BtnView>
-      <BtnView>
-        <Button
-          title="Registrarse"
-          onPress={handleRegister}
-          color="lightblack"
-        />
-      </BtnView>
+        <LabelView>
+          <Text>Contraseña:</Text>
+        </LabelView>
+        <PasswView>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Ex4mpl3pa55"
+            secureTextEntry={true} // oculta la contraseña
+            autoCapitalize="none"
+          />
+        </PasswView>
+      </ScreenContent>
+
+      <ActionsContainer>
+        <BtnView>
+          <Button
+            title="Iniciar Sesión"
+            onPress={handleSubmit}
+            color="lightblack"
+          />
+        </BtnView>
+        <BtnView style={{ marginBottom: 0 }}>
+          <Button
+            title="Registrarse"
+            onPress={handleRegister}
+            color="lightblack"
+          />
+        </BtnView>
+      </ActionsContainer>
     </MainContainer>
   );
 }

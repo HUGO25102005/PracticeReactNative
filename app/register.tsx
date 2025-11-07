@@ -1,26 +1,35 @@
-import { TextInput, Text, Button, Alert } from "react-native";
-import { useState } from "react";
-import { validarEmail, validarPasswrd } from "@/helpers";
 import {
-  BoxImage,
+  ActionsContainer,
   BtnView,
+  ConfirmPasswView,
   CorreoView,
   LabelView,
   MainContainer,
   PasswView,
-  RedViewWithImage,
+  ScreenContent,
+  TitleText,
+  UsuarioView,
 } from "@/components";
+import { validarEmail, validarPasswrd } from "@/helpers";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Button, Text, TextInput } from "react-native";
 
 export default function Index() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
 
   const handleSubmit = () => {
     // 1. Validar campos vacíos
-    if (!email && !password) {
-      Alert.alert("Error", "Por favor, llena ambos campos");
+    if (!username && !email && !password && !confirmPassword) {
+      Alert.alert("Error", "Por favor, completa todos los campos");
+      return;
+    }
+    if (!username) {
+      Alert.alert("Error", "Por favor, ingresa un nombre de usuario");
       return;
     }
     if (!password) {
@@ -31,9 +40,18 @@ export default function Index() {
       Alert.alert("Error", "Por favor, agrega un email");
       return;
     }
+    if (!confirmPassword) {
+      Alert.alert("Error", "Por favor, confirma tu contraseña");
+      return;
+    }
 
     if (!validarEmail(email)) {
       Alert.alert("Error", "Por favor, ingresa un correo electrónico válido");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
 
@@ -55,6 +73,7 @@ export default function Index() {
 
     // 4. Si todo está bien, guardar datos y mostrar éxito
     const userData = {
+      username: username,
       email: email,
       password: password,
       timestamp: new Date().toISOString(),
@@ -62,20 +81,18 @@ export default function Index() {
 
     console.log("Datos guardados:", userData);
 
-    Alert.alert(
-      "¡Éxito!",
-      "Inicio de sesión exitoso.\nCorreo: " + userData.email,
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            // Si quieres limpiar después del éxito, descomenta estas líneas:
-            // setEmail('');
-            // setPassword('');
-          },
+    Alert.alert("¡Éxito!", "Registro exitoso.\nUsuario: " + userData.username, [
+      {
+        text: "OK",
+        onPress: () => {
+          // Si quieres limpiar después del éxito, descomenta estas líneas:
+          // setUsername("");
+          // setEmail("");
+          // setPassword("");
+          // setConfirmPassword("");
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleLogin = () => {
@@ -85,51 +102,77 @@ export default function Index() {
   // ... (JSX del componente)
   return (
     <MainContainer>
-      <Text>Registrarse</Text>
-      {/* <RedViewWithImage>
-        <BoxImage
-          source={require("./../assets/images/person_512dp_292929_FILL0_wght500_GRAD0_opsz48.png")}
-          resizeMode="cover"
-          testID="icon-image"
-        />
-      </RedViewWithImage> */}
+      <ScreenContent>
+        <TitleText>Crear cuenta</TitleText>
 
-      <LabelView>
-        <Text>Correo:</Text>
-      </LabelView>
-      <CorreoView>
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          placeholder="ejemplo@correo.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-      </CorreoView>
+        <LabelView>
+          <Text>Nombre de usuario:</Text>
+        </LabelView>
+        <UsuarioView>
+          <TextInput
+            value={username}
+            onChangeText={setUsername}
+            placeholder="usuario123"
+            autoCapitalize="none"
+          />
+        </UsuarioView>
 
-      <LabelView>
-        <Text>Contraseña:</Text>
-      </LabelView>
-      <PasswView>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Ex4mpl3pa55"
-          secureTextEntry={true} // oculta la contraseña
-          autoCapitalize="none"
-        />
-      </PasswView>
+        <LabelView>
+          <Text>Correo:</Text>
+        </LabelView>
+        <CorreoView>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="ejemplo@correo.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </CorreoView>
 
-      <BtnView>
-        <Button title="Registrarse" onPress={handleSubmit} color="lightblack" />
-      </BtnView>
-      <BtnView>
-        <Button
-          title="Iniciar Sesión"
-          onPress={handleLogin}
-          color="lightblack"
-        />
-      </BtnView>
+        <LabelView>
+          <Text>Contraseña:</Text>
+        </LabelView>
+        <PasswView>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Ex4mpl3pa55"
+            secureTextEntry={true} // oculta la contraseña
+            autoCapitalize="none"
+          />
+        </PasswView>
+
+        <LabelView>
+          <Text>Repetir contraseña:</Text>
+        </LabelView>
+        <ConfirmPasswView>
+          <TextInput
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Repite tu contraseña"
+            secureTextEntry={true}
+            autoCapitalize="none"
+          />
+        </ConfirmPasswView>
+      </ScreenContent>
+
+      <ActionsContainer>
+        <BtnView>
+          <Button
+            title="Registrarse"
+            onPress={handleSubmit}
+            color="lightblack"
+          />
+        </BtnView>
+        <BtnView style={{ marginBottom: 0 }}>
+          <Button
+            title="Iniciar Sesión"
+            onPress={handleLogin}
+            color="lightblack"
+          />
+        </BtnView>
+      </ActionsContainer>
     </MainContainer>
   );
 }
