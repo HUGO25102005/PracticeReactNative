@@ -3,8 +3,11 @@ import {
   BtnView,
   ConfirmPasswView,
   CorreoView,
+  HeaderActions,
   LabelView,
   MainContainer,
+  NavButton,
+  NavButtonText,
   PasswView,
   ScreenContent,
   TitleText,
@@ -79,30 +82,30 @@ export default function Index() {
       timestamp: new Date().toISOString(),
     };
 
-    console.log("Datos guardados:", userData);
+    // console.log("Datos guardados:", userData);
 
     Alert.alert("¡Éxito!", "Registro exitoso.\nUsuario: " + userData.username, [
       {
         text: "OK",
-        onPress: () => {
-          // Si quieres limpiar después del éxito, descomenta estas líneas:
-          // setUsername("");
-          // setEmail("");
-          // setPassword("");
-          // setConfirmPassword("");
-        },
+        onPress: handleGoBack,
       },
     ]);
   };
 
-  const handleLogin = () => {
-    router.push("./");
+  const handleGoBack = () => {
+    router.back();
   };
 
   // ... (JSX del componente)
   return (
     <MainContainer>
       <ScreenContent>
+        <HeaderActions>
+          <NavButton onPress={handleGoBack} testID="register-back-button">
+            <NavButtonText>← Atrás</NavButtonText>
+          </NavButton>
+        </HeaderActions>
+
         <TitleText>Crear cuenta</TitleText>
 
         <LabelView>
@@ -162,13 +165,6 @@ export default function Index() {
           <Button
             title="Registrarse"
             onPress={handleSubmit}
-            color="lightblack"
-          />
-        </BtnView>
-        <BtnView style={{ marginBottom: 0 }}>
-          <Button
-            title="Iniciar Sesión"
-            onPress={handleLogin}
             color="lightblack"
           />
         </BtnView>

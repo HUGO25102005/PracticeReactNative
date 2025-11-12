@@ -26,6 +26,34 @@ export const TitleText = styled.Text`
   margin-bottom: 28px;
 `;
 
+export const HeaderActions = styled.View`
+  width: 100%;
+  max-width: 360px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+export const NavButton = styled.TouchableOpacity`
+  padding: 8px 14px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border-width: 1px;
+  border-color: #d9d9d9;
+  shadow-color: #00000022;
+  shadow-opacity: 0.08;
+  shadow-radius: 6px;
+  shadow-offset: 0px 3px;
+  elevation: 1;
+`;
+
+export const NavButtonText = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d2d2d;
+`;
+
 export const TextBoxContainer = styled.View`
   width: 100%;
   max-width: 320px;
