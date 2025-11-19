@@ -75,6 +75,7 @@ export default function Index() {
             // Si quieres limpiar después del éxito, descomenta estas líneas:
             // setEmail('');
             // setPassword('');
+            router.push("./home");
           },
         },
       ]
@@ -83,6 +84,9 @@ export default function Index() {
 
   const handleRegister = () => {
     router.push("./register");
+  };
+  const handleHome = () => {
+    router.push("./home");
   };
 
   // ... (JSX del componente)
@@ -141,6 +145,13 @@ export default function Index() {
             color="lightblack"
           />
         </BtnView>
+        {/* <BtnView style={{ marginBottom: 0 }}>
+          <Button
+            title="Home"
+            onPress={handleHome}
+            color="lightblack"
+          />
+        </BtnView> */}
       </ActionsContainer>
     </MainContainer>
   );
