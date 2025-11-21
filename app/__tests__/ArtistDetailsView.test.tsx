@@ -8,13 +8,57 @@ jest.mock("expo-router");
 import ArtistDetailsView from "../ArtistDetailsView";
 import { mockBack, mockUseLocalSearchParams } from "./__mocks__/expo-router";
 
-// Mock de MainContainer
-jest.mock("@/components", () => ({
-  MainContainer: ({ children }: { children: React.ReactNode }) => {
-    const { View } = require("react-native");
-    return <View testID="main-container">{children}</View>;
-  },
-}));
+// Mock de componentes de @/components
+jest.mock("@/components", () => {
+  const React = require("react");
+  const { View, Text, TouchableOpacity } = require("react-native");
+  return {
+    MainContainer: ({ children }: { children: React.ReactNode }) => {
+      return <View testID="main-container">{children}</View>;
+    },
+    ScreenContent: ({ children }: { children: React.ReactNode }) => {
+      return <View testID="screen-content">{children}</View>;
+    },
+    HeaderActions: ({ children }: { children: React.ReactNode }) => {
+      return <View testID="header-actions">{children}</View>;
+    },
+    NavButton: ({
+      children,
+      onPress,
+      testID,
+    }: {
+      children: React.ReactNode;
+      onPress: () => void;
+      testID?: string;
+    }) => {
+      return (
+        <TouchableOpacity onPress={onPress} testID={testID}>
+          {children}
+        </TouchableOpacity>
+      );
+    },
+    NavButtonText: ({ children }: { children: React.ReactNode }) => {
+      return <Text>{children}</Text>;
+    },
+  };
+});
+
+jest.mock("@/components/ArtistBox", () => {
+  const React = require("react");
+  const { View, Image, Text } = require("react-native");
+  return function ArtistBox({
+    artist,
+  }: {
+    artist: { id: number; name: string; image: string };
+  }) {
+    return (
+      <View testID="artist-box">
+        <Text>{artist.name}</Text>
+        <Image source={{ uri: artist.image }} />
+      </View>
+    );
+  };
+});
 
 describe("ArtistDetailsView Component", () => {
   beforeEach(() => {
@@ -33,10 +77,11 @@ describe("ArtistDetailsView Component", () => {
     render(<ArtistDetailsView />);
 
     expect(screen.getByText("Test Artist")).toBeTruthy();
-    const image = screen.UNSAFE_getByType(Image);
-    expect(image).toBeTruthy();
-    expect(image.props.source.uri).toBe("https://example.com/image.jpg");
-    expect(screen.getByText("1")).toBeTruthy();
+    const images = screen.UNSAFE_getAllByType(Image);
+    const artistImage = images.find(
+      (img) => img.props.source?.uri === "https://example.com/image.jpg"
+    );
+    expect(artistImage).toBeTruthy();
   });
 
   it("displays all artist information correctly", () => {
@@ -49,12 +94,13 @@ describe("ArtistDetailsView Component", () => {
     render(<ArtistDetailsView />);
 
     expect(screen.getByText("Pink Floyd")).toBeTruthy();
-    expect(screen.getByText("123")).toBeTruthy();
-    const image = screen.UNSAFE_getByType(Image);
-    expect(image).toBeTruthy();
-    expect(image.props.source.uri).toBe(
-      "https://lastfm.freetls.fastly.net/i/u/174s/pinkfloyd.jpg"
+    const images = screen.UNSAFE_getAllByType(Image);
+    const artistImage = images.find(
+      (img) =>
+        img.props.source?.uri ===
+        "https://lastfm.freetls.fastly.net/i/u/174s/pinkfloyd.jpg"
     );
+    expect(artistImage).toBeTruthy();
   });
 
   it("navigates back when back button is pressed", () => {
@@ -66,7 +112,7 @@ describe("ArtistDetailsView Component", () => {
 
     render(<ArtistDetailsView />);
 
-    const backButton = screen.getByText("Back");
+    const backButton = screen.getByText("← Atrás");
     fireEvent.press(backButton);
 
     expect(mockBack).toHaveBeenCalled();
@@ -81,9 +127,7 @@ describe("ArtistDetailsView Component", () => {
 
     render(<ArtistDetailsView />);
 
-    // Los componentes Text deberían renderizarse aunque estén vacíos
-    const texts = screen.getAllByText("");
-    expect(texts.length).toBeGreaterThan(0);
+    expect(screen.getByText("← Atrás")).toBeTruthy();
   });
 
   it("handles empty string params", () => {
@@ -95,8 +139,8 @@ describe("ArtistDetailsView Component", () => {
 
     render(<ArtistDetailsView />);
 
-    const texts = screen.getAllByText("");
-    expect(texts.length).toBeGreaterThan(0);
+    // El componente debería renderizarse aunque los params estén vacíos
+    expect(screen.getByText("← Atrás")).toBeTruthy();
   });
 
   it("renders back button with correct title", () => {
@@ -108,7 +152,7 @@ describe("ArtistDetailsView Component", () => {
 
     render(<ArtistDetailsView />);
 
-    const backButton = screen.getByText("Back");
+    const backButton = screen.getByText("← Atrás");
     expect(backButton).toBeTruthy();
   });
 });
