@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import * as React from "react";
+import { Image } from "react-native";
 
 // Mock de expo-router usando __mocks__
 jest.mock("expo-router");
@@ -32,7 +33,9 @@ describe("ArtistDetailsView Component", () => {
     render(<ArtistDetailsView />);
 
     expect(screen.getByText("Test Artist")).toBeTruthy();
-    expect(screen.getByText("https://example.com/image.jpg")).toBeTruthy();
+    const image = screen.UNSAFE_getByType(Image);
+    expect(image).toBeTruthy();
+    expect(image.props.source.uri).toBe("https://example.com/image.jpg");
     expect(screen.getByText("1")).toBeTruthy();
   });
 
@@ -47,11 +50,11 @@ describe("ArtistDetailsView Component", () => {
 
     expect(screen.getByText("Pink Floyd")).toBeTruthy();
     expect(screen.getByText("123")).toBeTruthy();
-    expect(
-      screen.getByText(
-        "https://lastfm.freetls.fastly.net/i/u/174s/pinkfloyd.jpg"
-      )
-    ).toBeTruthy();
+    const image = screen.UNSAFE_getByType(Image);
+    expect(image).toBeTruthy();
+    expect(image.props.source.uri).toBe(
+      "https://lastfm.freetls.fastly.net/i/u/174s/pinkfloyd.jpg"
+    );
   });
 
   it("navigates back when back button is pressed", () => {

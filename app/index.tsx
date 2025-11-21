@@ -16,8 +16,8 @@ import { useState } from "react";
 import { Alert, Button, Text, TextInput } from "react-native";
 
 export default function Index() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("hrodriguez28@gmail.com");
+  const [password, setPassword] = useState("Hugo@2510");
   const router = useRouter();
 
   const handleSubmit = () => {
@@ -73,9 +73,9 @@ export default function Index() {
           text: "OK",
           onPress: () => {
             // Si quieres limpiar después del éxito, descomenta estas líneas:
-            // setEmail('');
-            // setPassword('');
-            router.push("./home");
+            setEmail('');
+            setPassword('');
+            handleHome();
           },
         },
       ]
